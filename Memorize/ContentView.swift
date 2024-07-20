@@ -19,28 +19,25 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    var isFaceUp: Bool = false
-    
-    
+    @State var isFaceUp = false
     var body: some View {
         ZStack {
+            //let is const
+            let base = RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
             if isFaceUp {
                 //fill or stroke border, but not both
                 //we're doing this for the card to be well seen in dark mode too
-                RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
-                    .fill(Color.white)
-                RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
-                    .strokeBorder(lineWidth: 3)
+                base.fill(.white)
+                base.strokeBorder(lineWidth: 3)
                 //dashed border with 10 on, 2 off
-                /*RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
-                 .strokeBorder(style: StrokeStyle(lineWidth: 10, dash: [10,2]))
-                 */
+                //base.strokeBorder(style: StrokeStyle(lineWidth: 10, dash: [10,2]))
                 Text("🤓").font(.largeTitle)
             }
-            else {
-                RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
-            }
-            
+            else {base}
+        }
+        .onTapGesture {
+            print("tapped!")
+            isFaceUp.toggle()
         }
     }
 }
