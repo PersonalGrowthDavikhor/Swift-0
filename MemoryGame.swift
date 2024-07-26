@@ -26,20 +26,33 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
+    var indexFaceUpCard: Int?
+    
     // Method to handle choosing a card (game logic to be implemented)
     mutating func choose(card: Card) {
-        let chosenIndex = index(of: card)
-        cards[chosenIndex].isFaceUp.toggle()
+        if let chosenIndex = cards.firstIndex(where: {$0.id == card.id}) { //FIXME: what is that $0??
+            if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
+                if let potentialMatchIndex = indexFaceUpCard {
+                    if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                        cards[chosenIndex].isMatched = true
+                        cards[potentialMatchIndex].isMatched = true
+                    }
+                    indexFaceUpCard = nil
+                }
+                else {
+                    for index in cards.indices {
+                        cards[index].isFaceUp = false
+                    }
+                    indexFaceUpCard = chosenIndex
+                }
+                cards[chosenIndex].isFaceUp = true
+            }
+            
+            
+            
+        }
     }
     
-    func index(of card: Card) -> Int {
-        for index in cards.indices{
-            if cards[index].id == card.id {
-                return index
-            }
-        }
-        return 0 // FIXME: bogus
-    }
     
     // Method to shuffle the cards in the game
     mutating func shuffle() {
@@ -54,7 +67,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             lhs.content == rhs.content
         }*/
         
-        var isFaceUp = true // Boolean to track if the card is face up
+        var isFaceUp = false // Boolean to track if the card is face up
         var isMatched = false // Boolean to track if the card has been matched
         let content: CardContent // Content of the card
         
