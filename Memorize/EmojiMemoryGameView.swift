@@ -17,7 +17,7 @@ struct EmojiMemoryGameView: View {
         VStack {
             // ScrollView to contain the cards
             ScrollView {
-                cards
+                cards.animation(.default, value: viewModel.cards)
             }
             // Shuffle button to shuffle the cards
             Button("Shuffle") {
@@ -33,11 +33,14 @@ struct EmojiMemoryGameView: View {
         // LazyVGrid to create a grid layout with adaptive columns
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
             // Loop through the indices of the cards in the view model
-            ForEach(viewModel.cards.indices, id: \.self) { index in
+            ForEach(viewModel.cards) { card in
                 // Create a CardView for each card
-                CardView(viewModel.cards[index])
+                CardView(card)
                     .aspectRatio(2/3, contentMode: .fit)
                     .padding(4)
+                    .onTapGesture {
+                        viewModel.choose(card)
+                    }
             }
         }
         .foregroundColor(.purple) // Set the foreground color for the grid
